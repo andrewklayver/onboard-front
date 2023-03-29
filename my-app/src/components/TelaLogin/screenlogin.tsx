@@ -6,8 +6,8 @@ const TelaLogin = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <form className="LoginTela">
-      <label className="email" htmlFor="username">
+    <form className="card-login">
+      <label className="name-input" htmlFor="username">
         Email:
       </label>
       <input
@@ -18,7 +18,7 @@ const TelaLogin = () => {
         onChange={(event) => setUsername(event.target.value)}
       />
       <br />
-      <label className="senha" htmlFor="password">
+      <label className="name-input" htmlFor="password">
         Senha:
       </label>
       <input
