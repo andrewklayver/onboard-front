@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import Login from "./components/screenlogin";
+import TelaLogin from "./components/TelaLogin/screenlogin";
 
 function App() {
   return (
     <div className="App">
-      <Login />
+      <TelaLogin />
     </div>
   );
 }
