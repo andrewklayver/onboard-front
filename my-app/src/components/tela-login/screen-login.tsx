@@ -1,17 +1,45 @@
 import React, { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
 import "./screen-login.css";
+
+interface LoginResult {
+  token: string;
+}
+interface Loginvariables {
+  email: string;
+  password: string;
+}
+
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+    }
+  }
+`;
 
 const TelaLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [login, { data, loading, error }] = useMutation<
+    LoginResult,
+    Loginvariables
+  >(LOGIN_MUTATION);
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isValidEmail(email) && isValidPassword(password)) {
-      // API DE LOGIN AQUI
-      console.log("login válido");
+      try {
+        const result = await login({
+          variables: { email: email, password: password },
+        });
+        const token = result.data?.token;
+        console.log("token de autenticação:", token);
+      } catch (e) {
+        console.log("erro de login:", e);
+      }
     } else {
       console.log("login inválido");
     }
