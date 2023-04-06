@@ -36,7 +36,6 @@ const TelaLogin = () => {
       onCompleted: (data) => {
         const key = "token";
         localStorage.setItem(key, `${data.login.token}`);
-        console.log(data);
       },
       onError: (error) => {
         console.error(error);
