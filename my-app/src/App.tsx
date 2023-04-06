@@ -1,11 +1,10 @@
-import React from "react";
 import "./App.css";
-import TelaLogin from "./components/tela-login/screen-login";
+import RoutesApp from "./routes/routes";
 
 function App() {
   return (
     <div className="App">
-      <TelaLogin />
+      <RoutesApp />
     </div>
   );
 }
