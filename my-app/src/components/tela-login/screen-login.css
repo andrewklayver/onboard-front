@@ -38,3 +38,7 @@ body {
   border-radius: 5px;
   margin-top: 5%;
 }
+
+.error-message {
+  color: red;
+}
