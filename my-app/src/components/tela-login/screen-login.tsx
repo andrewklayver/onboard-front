@@ -1,17 +1,60 @@
 import React, { useState } from "react";
+import { gql, useMutation } from "@apollo/client";
 import "./screen-login.css";
+
+interface LoginInput {
+  email: string;
+  password: string;
+}
+
+interface LoginData {
+  login: {
+    token: string;
+  };
+}
+
+interface LoginVariables {
+  data: LoginInput;
+}
+
+const LOGIN_MUTATION = gql`
+  mutation login($data: LoginInput!) {
+    login(data: $data) {
+      token
+    }
+  }
+`;
 
 const TelaLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [login, { error }] = useMutation<LoginData, LoginVariables>(
+    LOGIN_MUTATION,
+    {
+      onCompleted: (data) => {
+        const key = "token";
+        localStorage.setItem(key, `${data.login.token}`);
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    }
+  );
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isValidEmail(email) && isValidPassword(password)) {
-      // API DE LOGIN AQUI
-      console.log("login válido");
+      const { data } = await login({
+        variables: {
+          data: {
+            email: email,
+            password: password,
+          },
+        },
+      });
+      console.log("login válido", data);
     } else {
       console.log("login inválido");
     }
@@ -28,8 +71,7 @@ const TelaLogin = () => {
   };
 
   const isValidPassword = (password: string) => {
-    const passwordRegex =
-      /^(?=.*[!@#$%^&*()_+=[\]{};':"\\|,.<>/?])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+=[\]{};':"\\|,.<>/?]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8}$/;
     if (!passwordRegex.test(password)) {
       setPasswordError("Senha inválida");
       return false;
@@ -79,6 +121,7 @@ const TelaLogin = () => {
       >
         Login
       </button>
+      {error && <p>{error.message}</p>}
     </form>
   );
 };
